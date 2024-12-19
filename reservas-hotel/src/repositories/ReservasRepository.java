@@ -1,4 +1,7 @@
-package model;
+package repositories;
+
+import model.Habitacion;
+import model.Huesped;
 
 import java.util.HashMap;
 import java.util.Map;
