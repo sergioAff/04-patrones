@@ -14,9 +14,10 @@ public class Main {
         ReservasController controlador = new ReservasController(repositorio, vista);
 
 
-        controlador.realizarReserva(101, "Juan Pérez");
-        controlador.realizarReserva(102, "María García");
-        controlador.realizarReserva(101, "Carlos López");
+        controlador.realizarReserva(101, "Sher Maestre");
+        controlador.realizarReserva(102, "Jose Maestre");
+        controlador.realizarReserva(101, "Asli Maestre");
+        controlador.realizarReserva(106, "John Doe");
         controlador.mostrarReservas();
 
         controlador.cancelarReserva(101);
