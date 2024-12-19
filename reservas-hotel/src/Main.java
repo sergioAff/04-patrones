@@ -1,28 +1,20 @@
 import controller.ReservasController;
-import model.ReservasRepository;
-import view.ReservasView;
+import repositories.ReservasRepository;
 
 public class Main {
     public static void main(String[] args) {
-        // Usamos el singleton
-        ReservasRepository repositorio = ReservasRepository.getInstancia();
+        ReservasController controller = new ReservasController();
 
-        // creamos la vista
-        ReservasView vista = new ReservasView();
+        controller.realizarReserva(101, "Sher Maestre");
+        controller.realizarReserva(102, "Jose Maestre");
+        controller.realizarReserva(101, "Asli Maestre");
+        controller.realizarReserva(106, "John Doe");
 
-        // creamos el controlador y le pasamos la unica instancia de nuestro repo
-        ReservasController controlador = new ReservasController(repositorio, vista);
+        controller.mostrarReservas();
 
+        controller.cancelarReserva(101);
 
-        controlador.realizarReserva(101, "Sher Maestre");
-        controlador.realizarReserva(102, "Jose Maestre");
-        controlador.realizarReserva(101, "Asli Maestre");
-        controlador.realizarReserva(106, "John Doe");
-        controlador.mostrarReservas();
-
-        controlador.cancelarReserva(101);
-
-        controlador.mostrarReservas();
+        controller.mostrarReservas();
 
     }
 }

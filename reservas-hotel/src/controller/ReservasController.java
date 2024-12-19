@@ -2,40 +2,43 @@ package controller;
 
 import model.Habitacion;
 import model.Huesped;
-import model.ReservasRepository;
-import view.ReservasView;
+import repositories.ReservasRepository;
+import services.GestorReservasService;
+
+import java.util.Map;
 
 public class ReservasController {
-    private ReservasRepository repositorio;
-    private ReservasView vista;
 
-    public ReservasController(ReservasRepository repositorio, ReservasView vista) {
-        this.repositorio = repositorio;
-        this.vista = vista;
+    private GestorReservasService gestorReservasService;
+
+    public ReservasController() {
+        this.gestorReservasService = new GestorReservasService();
     }
 
     public void realizarReserva(int numeroHabitacion, String nombreHuesped) {
-        Habitacion habitacion = new Habitacion(numeroHabitacion);
-        Huesped huesped = new Huesped(nombreHuesped);
-
-        if (repositorio.agregarReserva(habitacion, huesped)) {
-            vista.mostrarMensaje("Reserva realizada: Habitación " + numeroHabitacion + " para " + nombreHuesped);
+        if (gestorReservasService.realizarReserva(numeroHabitacion, nombreHuesped)) {
+            System.out.println("Reserva realizada: Habitación " + numeroHabitacion + " para " + nombreHuesped);
         } else {
-            vista.mostrarMensaje("La habitación " + numeroHabitacion + " ya está reservada.");
+            System.out.println("La habitación " + numeroHabitacion + " ya está reservada.");
         }
     }
 
     public void cancelarReserva(int numeroHabitacion) {
-        Habitacion habitacion = new Habitacion(numeroHabitacion);
-
-        if (repositorio.eliminarReserva(habitacion)) {
-            vista.mostrarMensaje("Reserva cancelada para la habitación " + numeroHabitacion);
+        if (gestorReservasService.cancelarReserva(numeroHabitacion)) {
+            System.out.println("Reserva cancelada para la habitación " + numeroHabitacion);
         } else {
-            vista.mostrarMensaje("No existe reserva para la habitación " + numeroHabitacion);
+            System.out.println("No existe reserva para la habitación " + numeroHabitacion);
         }
     }
 
     public void mostrarReservas() {
-        vista.mostrarReservas(repositorio.obtenerReservas());
+        Map<Integer, Huesped> reservas = gestorReservasService.obtenerReservas();
+        if (reservas.isEmpty()) {
+            System.out.println("No hay reservas en este momento.");
+        } else {
+            System.out.println("Reservas actuales:");
+            reservas.forEach((numero, huesped) ->
+                    System.out.println("Habitación " + numero + ": " + huesped.getNombre()));
+        }
     }
 }
