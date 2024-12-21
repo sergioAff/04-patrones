@@ -17,6 +17,7 @@ public class RealBookService implements IBookService {
     public Book findBook(String title) {
         return bookDatabase.get(title);
     }
+
     public String readBookContent(String title) {
         Book book = bookDatabase.get(title);
         return (book != null) ? book.getContent() : null;
