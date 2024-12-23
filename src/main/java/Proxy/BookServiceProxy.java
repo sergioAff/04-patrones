@@ -2,12 +2,16 @@ package Proxy;
 
 import Interface.IBookService;
 import Model.Book;
-import Model.Role;
+import constants.Role;
 import Model.User;
 import Services.RealBookService;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static utils.ProxyUtils.fetchBookFromCache;
+import static utils.ProxyUtils.isBookInCache;
+import static utils.ProxyUtils.logAccess;
 
 public class BookServiceProxy implements IBookService {
     private RealBookService realBookService;
@@ -22,10 +26,13 @@ public class BookServiceProxy implements IBookService {
 
     @Override
     public Book findBook(String title) {
-        if (cache.containsKey(title)) {
-            System.out.println("Fetching book from cache: " + title);
-            return cache.get(title);
+        if (isBookInCache(cache,title)) {
+            return fetchBookFromCache(cache,title);
         }
+        return fetchBookFromServiceAndCache(title);
+    }
+
+    private Book fetchBookFromServiceAndCache(String title) {
         System.out.println("Fetching book from real service: " + title);
         Book book = realBookService.findBook(title);
         if (book != null) {
@@ -33,19 +40,13 @@ public class BookServiceProxy implements IBookService {
         }
         return book;
     }
+
     public String readBookContent(User user, String title) {
-        logAccess(user, title, "read");
+        logAccess(accessLog,user, title, "read");
         if (user.getRole() == Role.MEMBER) {
             return realBookService.readBookContent(title);
         } else {
             return "Access Denied: Guests are not allowed to read full content.";
         }
     }
-
-    private void logAccess(User user, String title, String action) {
-        String logEntry = "User: " + user.getName() + " Role: " + user.getRole() + " Action: " + action + " Book: " + title;
-        accessLog.put(user.getName() + "-" + title, logEntry);
-        System.out.println(logEntry);
-    }
-
 }

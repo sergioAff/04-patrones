@@ -1,5 +1,7 @@
 package Model;
 
+import constants.Role;
+
 public class User {
     private String name;
     private Role role;
